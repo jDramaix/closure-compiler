@@ -89,12 +89,13 @@ jobs:
   run-tests:
     uses: ./.github/workflows/run_tests.yaml
     needs: tag_release_version_id
-    if: needs.tag_release_version_id.outputs.foundNewRelease == 'true'
+    # Only run tests if a new release is being cut.
+    if: ${{ needs.tag_release_version_id.outputs.foundNewRelease == 'true' }}
 
   publish-to-sonatype:
     runs-on: ubuntu-latest
+    # Only publish if tests passed.
     needs: run-tests
-    if: needs.tag_release_version_id.outputs.foundNewRelease == 'true'
 
     steps:
       - name: Check secrets are provided
